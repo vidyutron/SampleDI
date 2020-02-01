@@ -1,13 +1,5 @@
 ﻿using SampleDI.AppLogic;
-using SimpleInjector;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SampleDI
@@ -15,10 +7,12 @@ namespace SampleDI
     public partial class Form1 : Form
     {
         private IUtil _util;
+        private IConfig _config;
 
-        public Form1(IUtil util)
+        public Form1(IUtil util,IConfig config)
         {
             _util = util;
+            _config = config;
             InitializeComponent();
         }
 
