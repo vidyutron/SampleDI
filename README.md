@@ -37,10 +37,81 @@ It allows the creation of dependent objects outside of a class and provides thos
 Please hold your horses for the time being.
 
 # What is factory pattern?
-> well many of them know by the virtue of the its name itself, so no explanation but we will see how using **Autofac** we achieve this and help ourselves in the quest for injecting dependecies.
+> Well many of them know by the virtue of the its name itself, so no explanation but we will see how using **Autofac** we achieve this and help ourselves in the quest for injecting dependecies.
 
 
 # Now, some real stuff!
+
+**What's Happening?**  
+![Alt text](/_img/grah_01.png?raw=true "Optional Title")  
+
+
+**Class**: Bootstrap.cs  
+**Library Used**: Autofac  
+**Funtionality**: Configure the dependency injection by :   
+A. Registering the types(class) which would be used in the pipeline( with reference from above illustration ).  
+B. Resolving the registered classes using Autfac, which basically is behind the scene factory object creation with the prameterized constructors.  
+
+    public static class Bootstrap
+    {
+        public static IContainer Configure()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<Startup>();
+            builder.RegisterType<Config>().As<IConfig>();
+            builder.RegisterType<Util>().As<IUtil>();
+            builder.RegisterType<Operations>().As<IOperations>();
+
+            builder.RegisterAssemblyTypes(Assembly.Load(nameof(DomainLayer)))
+                .Where(t => t.Namespace.Contains("Fork"))
+                .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
+
+            return builder.Build();
+        }
+    }
+Above, we register the types(participating classes) using *.RegisterType<>* or better if we organise our project in such way that whole projects could loaded at once using the *.RegisterAssemblyTypes<>*, above we have structured the classes and their abstraction with proper naming convention such that we use the power of **Reflection** and **Linq** to get all the mapping in single shot.
+
+  
+    
+    
+**Class**: Startup.cs  
+**Library Used**: Windows.Forms  
+**Funtionality**: Wrapper to inject items and call win form entry form.
+public class Startup
+    {
+        private IUtil _util;
+        private IConfig _config;
+
+        public Startup(IUtil util,IConfig config)
+        {
+            _util = util;
+            _config = config;
+        }
+
+        public void Run()
+        {
+            var form = new Form1(_util,_config);
+            Application.Run(form);
+        }
+    }  
+
+**Class**: Program.cs  
+**Library Used**: Autofac  
+**Funtionality**: MAIN ENTRY POINT of our application, because it is *static void main*
+
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            var bootstrap = Bootstrap.Configure();
+            using(var scope = bootstrap.BeginLifetimeScope())
+            {
+                var startup = scope.Resolve<Startup>();
+                startup.Run();
+            }
+        }
+
  
 
 
