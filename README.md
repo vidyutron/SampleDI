@@ -32,9 +32,9 @@ But, we will see that as we build any loosely coupled system(jargon!) how eviden
 # What is dependency Injection?
 It allows the creation of dependent objects outside of a class and provides those objects to a class through various ways like constructor injection(recommended), method injection or property injection.
 
-> Make objects available to other classes though some means of paramerised argument or property passing, without explicitly sending them( whhaaat!, I am passing something but not actually sending them??)
+> Make objects available to other classes though some means of paramerised argument or property passing, without explicitly sending.
 
-Please hold your horses for the time being.
+Whhaaat! passing something but without sending them?? Please hold your horses for the time being. We will understand how
 
 # What is factory pattern?
 > Well many of them know by the virtue of the its name itself, so no explanation but we will see how using **Autofac** we achieve this and help ourselves in the quest for injecting dependecies.
@@ -42,15 +42,15 @@ Please hold your horses for the time being.
 
 # Now, some real stuff!
 
-**What's Happening?**  
-![Alt text](/_img/grah_01.png?raw=true "Optional Title")  
+**What's Happening?**
+![Alt text](/_img/graph_01.PNG?raw=true "Optional Title")  
 
 
 **Class**: Bootstrap.cs  
 **Library Used**: Autofac  
 **Funtionality**: Configure the dependency injection by :   
 A. Registering the types(class) which would be used in the pipeline( with reference from above illustration ).  
-B. Resolving the registered classes using Autfac, which basically is behind the scene factory object creation with the prameterized constructors.  
+B. Resolving the registered classes using Autofac, which basically is behind the scene factory object creation with the prameterized constructors.  
 
     public static class Bootstrap
     {
@@ -75,7 +75,7 @@ Above, we register the types(participating classes) using *.RegisterType<>* or b
     
     
 **Class**: Startup.cs  
-**Library Used**: Windows.Forms  
+**Library Used**: Windows.Forms
 **Funtionality**: Wrapper to inject items and call win form entry form.
 public class Startup
     {
@@ -96,8 +96,8 @@ public class Startup
     }  
 
 **Class**: Program.cs  
-**Library Used**: Autofac  
-**Funtionality**: MAIN ENTRY POINT of our application, because it is *static void main*
+**Library Used**: Autofac
+**Funtionality**: MAIN ENTRY POINT of our application, because it's *static void main!*
 
         static void Main()
         {
@@ -112,6 +112,17 @@ public class Startup
             }
         }
 
+Here connect the configuration done in bootstrap class to the startup class with the **.Resolve<>** extension. **.Run()** simply starts the form1.  
+.Resolve is the key, this internally transalates into creation of objects for all the registerd classes mentioned in the Bootstrap.Configure( ), such that all constructor injection happen behind the scene and no *object newing* explicitly.  
+
+Example :   
+![Alt text](/_img/cons_injection_01.png?raw=true "Optional Title")
+
+Here, if you see the refernce to the constructor is 0, yet util IConfig and IOperation gets injeced into the constructor and could be used by rest of the Util.cs's functionality. This magic is possible becaouse of internal factor object creation and injection using **AutoFac**.  
+
+If you browse several of the concrete classes you will find similar pattern of important dependencies( in our example we are using only important ones!) being passed through the constructor, this greatly makes the de-coupling better and efficient scoping of the objects, instead of simply making everything static and global and cluttering the scope and memory.
+**And Most Importantly - if you look closely we are hardly doing new object()** 
+ 
  
 
 
