@@ -42,7 +42,8 @@ Whhaaat! passing something but without sending them?? Please hold your horses fo
 
 # Now, some real stuff!
 
-**What's Happening?**
+**What's Happening?**  
+
 ![Alt text](/_img/graph_01.PNG?raw=true "Optional Title")  
 
 
@@ -118,10 +119,10 @@ Here connect the configuration done in bootstrap class to the startup class with
 Example :   
 ![Alt text](/_img/cons_injection_01.png?raw=true "Optional Title")
 
-Here, if you see the refernce to the constructor is 0, yet util IConfig and IOperation gets injeced into the constructor and could be used by rest of the Util.cs's functionality. This magic is possible becaouse of internal factor object creation and injection using **AutoFac**.  
+Here, if you see the reference to the constructor is 0, yet util IConfig and IOperation gets injected into the constructor and could be used by rest of the Util.cs's functionality. This magic is possible becouse of internal factory object creation and injection using **AutoFac**.  
 
-If you browse several of the concrete classes you will find similar pattern of important dependencies( in our example we are using only important ones!) being passed through the constructor, this greatly makes the de-coupling better and efficient scoping of the objects, instead of simply making everything static and global and cluttering the scope and memory.
-**And Most Importantly - if you look closely we are hardly doing new object()** 
+If you browse several of the concrete classes you will find similar pattern of important dependencies( in our example we are using only important ones!) being passed through the constructor, this greatly makes the de-coupling better and efficient scoping of the objects, instead of simply making everything static or global and cluttering the scope and memory.
+**Most Importantly - if you look closely we are hardly doing new object(), and this is key to the Dependecy Inversion** 
  
  
 
